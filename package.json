@@ -1,0 +1,16 @@
+{
+  "name": "ibpt",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "fast-csv": "^0.5.5",
+    "iconv-lite": "^0.4.7"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "gabriel@nfe.io",
+  "license": "ISC"
+}
