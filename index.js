@@ -11,7 +11,7 @@ estados.forEach(function(estado) {
   fs.mkdir("ncm/"+estado.toLowerCase(), function(e) {});
   fs.mkdir("nbs/"+estado.toLowerCase(), function(e) {});
 
-  var content = fs.readFileSync("tabelas/TabelaIBPTax"+estado+"15.1.B.csv");
+  var content = fs.readFileSync("tabelas/TabelaIBPTax"+estado+"15.1.C.csv");
   var string = iconvlite.decode(content, 'ISO-8859-1');
 
   csv
