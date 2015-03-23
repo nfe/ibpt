@@ -11,29 +11,52 @@ estados.forEach(function(estado) {
   fs.mkdir("ncm/"+estado.toLowerCase(), function(e) {});
   fs.mkdir("nbs/"+estado.toLowerCase(), function(e) {});
 
-  var content = fs.readFileSync("tabelas/TabelaIBPTax"+estado+"15.1.C.csv");
-  var string = iconvlite.decode(content, 'ISO-8859-1');
+  var fileName = "tabelas/TabelaIBPTax"+estado+"15.1.C.csv";
 
-  csv
-   .fromString(string, {
-     headers : ["codigo","ex","tipo","descricao","nacionalfederal","importadosfederal","estadual","municipal","vigenciainicio","vigenciafim","chave","versao","fonte"],
-     quoteColumns: false, ignoreEmpty:true, quote:null, delimiter:';'
-   })
-   .on("data", function(data){
-     var tipo = 'ncm';
-     if (data.tipo == 1) {
-       tipo = 'nbs';
-     }
-     fs.writeFile(tipo+"/"+estado.toLowerCase()+"/" + data.codigo + ".json", JSON.stringify(data), function(err) {
-      if(err) {
-        console.log(err);
-      } else {
-        console.log("Criado arquivo " + data.codigo);
-      }
+  var content = fs.readFile(fileName, function (err, data) {
+
+    if (err)
+    {
+      console.log(fileName);
+      throw err;
+    }
+
+    console.log("Processando arquivo " + fileName);
+
+    var string = iconvlite.decode(data, 'ISO-8859-1');
+
+    csv
+     .fromString(string, {
+       headers : ["codigo",
+                  "ex",
+                  "tipo",
+                  "descricao",
+                  "nacionalfederal",
+                  "importadosfederal",
+                  "estadual",
+                  "municipal",
+                  "vigenciainicio",
+                  "vigenciafim",
+                  "chave",
+                  "versao",
+                  "fonte"],
+       quoteColumns: false, ignoreEmpty:true, quote:null, delimiter:';'
+     })
+     .on("error", function(err){
+       console.log(fileName, err);
+       throw err;
+     })
+     .on("data", function(data){
+       var tipo = 'ncm';
+       if (data.tipo == 1) {
+         tipo = 'nbs';
+       }
+       fs.writeFileSync(tipo+"/"+estado.toLowerCase()+"/" + data.codigo + ".json", JSON.stringify(data));
+     })
+     .on("end", function(){
+         console.log("Finalizado processamento de " + fileName);
      });
-   })
-   .on("end", function(){
-       console.log("done");
-   });
+
+  });
 
 });
