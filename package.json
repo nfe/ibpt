@@ -4,13 +4,15 @@
   "description": "",
   "main": "index.js",
   "dependencies": {
+    "dotenv": "^1.1.0",
     "fast-csv": "^0.5.5",
-    "iconv-lite": "^0.4.7"
+    "iconv-lite": "^0.4.7",
+    "deploy-azure-cdn": "^1.0.1",
+    "glob": "^5.0.5"
   },
-  "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "gabriel@nfe.io",
-  "license": "ISC"
+  "license": "MIT"
 }
