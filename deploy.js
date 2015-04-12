@@ -1,6 +1,10 @@
-require("dotenv").load(); // load environment variables from .env
 var deploy = require("deploy-azure-cdn");
 var glob = require("glob");
+
+// load environment variables from .env
+if (require("fs").existsSync(".env")) {
+  require("dotenv").load();
+}
 
 // environment variables
 var azure_account = process.env.AZURE_ACCOUNT,
