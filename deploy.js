@@ -26,7 +26,10 @@ var opts = {
 
 var mapFilesToDeploy = function(files) {
   return files.map(function(item) {
-    return { cwd: '.', path: item };
+    return {
+      cwd: '.',
+      path: item.substring(4) // remove nbs/ or ncm/
+    };
   });
 };
 
