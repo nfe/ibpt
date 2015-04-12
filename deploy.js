@@ -27,8 +27,8 @@ var opts = {
 var mapFilesToDeploy = function(files) {
   return files.map(function(item) {
     return {
-      cwd: '.',
-      path: item.substring(4) // remove nbs/ or ncm/
+      cwd: item.substring(0, 3),
+      path: item
     };
   });
 };
@@ -45,12 +45,12 @@ glob("nbs/**/*.json", null, function (er, files) {
 });
 
 // upload ncm json files
-glob("ncm/**/*.json", null, function (er, files) {
-  opts.containerName = 'ncm';
-  deploy(opts, mapFilesToDeploy(files), logger, function(err){
-      if(err) {
-          console.log("Error deploying", err);
-      }
-      console.log('Job\'s done!');
-  });
-});
+// glob("ncm/**/*.json", null, function (er, files) {
+//   opts.containerName = 'ncm';
+//   deploy(opts, mapFilesToDeploy(files), logger, function(err){
+//       if(err) {
+//           console.log("Error deploying", err);
+//       }
+//       console.log('Job\'s done!');
+//   });
+// });
