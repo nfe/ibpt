@@ -1,1 +1,1 @@
-{"fiscalType":"nbs","state":"am","code":"111112000","effectiveDate":"2015-01-01","federalNationalRate":"13.45","federalImportedRate":"14.05","stateRate":"0.00","municipalRate":"3.00","version":"15.1.C","source":"IBPT"}
+{"fiscalType":"nbs","state":"am","code":"111112000","effectiveDate":"2015-01-01","federalNationalRate":13.45,"federalImportedRate":14.05,"stateRate":0,"municipalRate":3,"version":"15.1.C","source":"IBPT"}

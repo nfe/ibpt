@@ -1,1 +1,1 @@
-{"fiscalType":"ncm","state":"ma","code":"43031000","effectiveDate":"2015-01-01","federalNationalRate":"20.33","federalImportedRate":"33.54","stateRate":"17.00","municipalRate":"0.00","version":"15.1.C","source":"IBPT"}
+{"fiscalType":"ncm","state":"ma","code":"43031000","effectiveDate":"2015-01-01","federalNationalRate":20.33,"federalImportedRate":33.54,"stateRate":17,"municipalRate":0,"version":"15.1.C","source":"IBPT"}
