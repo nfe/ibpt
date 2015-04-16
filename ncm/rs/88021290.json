@@ -1,1 +1,1 @@
-{"fiscalType":"ncm","state":"rs","code":"88021290","effectiveDate":"2015-01-01","federalNationalRate":10.71,"federalImportedRate":11.31,"stateRate":12,"municipalRate":0,"version":"15.1.C","source":"IBPT"}
+{"fiscalType":"ncm","state":"rs","source":"IBPT","version":"15.1.C","code":"88021290","effectiveDate":"2015-01-01","federalNationalRate":10.71,"federalImportedRate":11.31,"stateRate":12,"municipalRate":0}

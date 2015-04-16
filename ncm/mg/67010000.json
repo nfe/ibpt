@@ -1,1 +1,1 @@
-{"fiscalType":"ncm","state":"mg","code":"67010000","effectiveDate":"2015-01-01","federalNationalRate":26.01,"federalImportedRate":37.01,"stateRate":18,"municipalRate":0,"version":"15.1.C","source":"IBPT"}
+{"fiscalType":"ncm","state":"mg","source":"IBPT","version":"15.1.C","code":"67010000","effectiveDate":"2015-01-01","federalNationalRate":26.01,"federalImportedRate":37.01,"stateRate":18,"municipalRate":0}

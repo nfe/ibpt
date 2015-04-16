@@ -1,1 +1,1 @@
-{"fiscalType":"ncm","state":"pi","code":"95069100","effectiveDate":"2015-01-01","federalNationalRate":25.65,"federalImportedRate":38.45,"stateRate":17,"municipalRate":0,"version":"15.1.C","source":"IBPT"}
+{"fiscalType":"ncm","state":"pi","source":"IBPT","version":"15.1.C","code":"95069100","effectiveDate":"2015-01-01","federalNationalRate":25.65,"federalImportedRate":38.45,"stateRate":17,"municipalRate":0}

@@ -1,1 +1,1 @@
-{"fiscalType":"nbs","state":"pr","code":"104012100","effectiveDate":"2015-01-01","federalNationalRate":13.45,"federalImportedRate":14.05,"stateRate":0,"municipalRate":2.11,"version":"15.1.C","source":"IBPT"}
+{"fiscalType":"nbs","state":"pr","source":"IBPT","version":"15.1.C","code":"104012100","effectiveDate":"2015-01-01","federalNationalRate":13.45,"federalImportedRate":14.05,"stateRate":0,"municipalRate":2.11}

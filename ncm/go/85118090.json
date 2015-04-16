@@ -1,1 +1,1 @@
-{"fiscalType":"ncm","state":"go","code":"85118090","effectiveDate":"2015-01-01","federalNationalRate":18.72,"federalImportedRate":25.48,"stateRate":17,"municipalRate":0,"version":"15.1.C","source":"IBPT"}
+{"fiscalType":"ncm","state":"go","source":"IBPT","version":"15.1.C","code":"85118090","effectiveDate":"2015-01-01","federalNationalRate":18.72,"federalImportedRate":25.48,"stateRate":17,"municipalRate":0}

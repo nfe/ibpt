@@ -1,1 +1,1 @@
-{"fiscalType":"ncm","state":"se","code":"42031000","effectiveDate":"2015-01-01","federalNationalRate":19.87,"federalImportedRate":32.24,"stateRate":17,"municipalRate":0,"version":"15.1.C","source":"IBPT"}
+{"fiscalType":"ncm","state":"se","source":"IBPT","version":"15.1.C","code":"42031000","effectiveDate":"2015-01-01","federalNationalRate":19.87,"federalImportedRate":32.24,"stateRate":17,"municipalRate":0}

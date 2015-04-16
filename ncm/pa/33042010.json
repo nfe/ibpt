@@ -1,1 +1,1 @@
-{"fiscalType":"ncm","state":"pa","code":"33042010","effectiveDate":"2015-01-01","federalNationalRate":26.84,"federalImportedRate":38.76,"stateRate":17,"municipalRate":0,"version":"15.1.C","source":"IBPT"}
+{"fiscalType":"ncm","state":"pa","source":"IBPT","version":"15.1.C","code":"33042010","effectiveDate":"2015-01-01","federalNationalRate":26.84,"federalImportedRate":38.76,"stateRate":17,"municipalRate":0}

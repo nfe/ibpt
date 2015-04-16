@@ -1,1 +1,1 @@
-{"fiscalType":"ncm","state":"al","code":"12129100","effectiveDate":"2015-01-01","federalNationalRate":4.2,"federalImportedRate":10.55,"stateRate":17,"municipalRate":0,"version":"15.1.C","source":"IBPT"}
+{"fiscalType":"ncm","state":"al","source":"IBPT","version":"15.1.C","code":"12129100","effectiveDate":"2015-01-01","federalNationalRate":4.2,"federalImportedRate":10.55,"stateRate":17,"municipalRate":0}

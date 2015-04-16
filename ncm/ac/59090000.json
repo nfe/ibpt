@@ -1,1 +1,1 @@
-{"fiscalType":"ncm","state":"ac","code":"59090000","effectiveDate":"2015-01-01","federalNationalRate":15.37,"federalImportedRate":21.54,"stateRate":17,"municipalRate":0,"version":"15.1.C","source":"IBPT"}
+{"fiscalType":"ncm","state":"ac","source":"IBPT","version":"15.1.C","code":"59090000","effectiveDate":"2015-01-01","federalNationalRate":15.37,"federalImportedRate":21.54,"stateRate":17,"municipalRate":0}

@@ -1,1 +1,1 @@
-{"fiscalType":"nbs","state":"pa","code":"101192000","effectiveDate":"2015-01-01","federalNationalRate":13.45,"federalImportedRate":14.05,"stateRate":0,"municipalRate":5,"version":"15.1.C","source":"IBPT"}
+{"fiscalType":"nbs","state":"pa","source":"IBPT","version":"15.1.C","code":"101192000","effectiveDate":"2015-01-01","federalNationalRate":13.45,"federalImportedRate":14.05,"stateRate":0,"municipalRate":5}

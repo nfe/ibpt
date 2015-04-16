@@ -1,1 +1,1 @@
-{"fiscalType":"ncm","state":"se","code":"96020020","effectiveDate":"2015-01-01","federalNationalRate":13.45,"federalImportedRate":24.82,"stateRate":17,"municipalRate":0,"version":"15.1.C","source":"IBPT"}
+{"fiscalType":"ncm","state":"se","source":"IBPT","version":"15.1.C","code":"96020020","effectiveDate":"2015-01-01","federalNationalRate":13.45,"federalImportedRate":24.82,"stateRate":17,"municipalRate":0}

@@ -1,1 +1,1 @@
-{"fiscalType":"ncm","state":"mt","code":"44123900","effectiveDate":"2015-01-01","federalNationalRate":17.02,"federalImportedRate":24.43,"stateRate":17,"municipalRate":0,"version":"15.1.C","source":"IBPT"}
+{"fiscalType":"ncm","state":"mt","source":"IBPT","version":"15.1.C","code":"44123900","effectiveDate":"2015-01-01","federalNationalRate":17.02,"federalImportedRate":24.43,"stateRate":17,"municipalRate":0}
