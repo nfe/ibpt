@@ -1,1 +1,1 @@
-{"fiscalType":"ncm","state":"ce","code":"33030020","effectiveDate":"2015-01-01","federalNationalRate":21.67,"federalImportedRate":33.98,"stateRate":17,"municipalRate":0,"version":"15.1.C","source":"IBPT"}
+{"fiscalType":"ncm","state":"ce","source":"IBPT","version":"15.1.C","code":"33030020","effectiveDate":"2015-01-01","federalNationalRate":21.67,"federalImportedRate":33.98,"stateRate":17,"municipalRate":0}

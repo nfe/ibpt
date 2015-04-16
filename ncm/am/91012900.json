@@ -1,1 +1,1 @@
-{"fiscalType":"ncm","state":"am","code":"91012900","effectiveDate":"2015-01-01","federalNationalRate":28.94,"federalImportedRate":42.45,"stateRate":17,"municipalRate":0,"version":"15.1.C","source":"IBPT"}
+{"fiscalType":"ncm","state":"am","source":"IBPT","version":"15.1.C","code":"91012900","effectiveDate":"2015-01-01","federalNationalRate":28.94,"federalImportedRate":42.45,"stateRate":17,"municipalRate":0}

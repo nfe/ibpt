@@ -1,1 +1,1 @@
-{"fiscalType":"ncm","state":"pa","code":"87099000","effectiveDate":"2015-01-01","federalNationalRate":9.77,"federalImportedRate":15.33,"stateRate":17,"municipalRate":0,"version":"15.1.C","source":"IBPT"}
+{"fiscalType":"ncm","state":"pa","source":"IBPT","version":"15.1.C","code":"87099000","effectiveDate":"2015-01-01","federalNationalRate":9.77,"federalImportedRate":15.33,"stateRate":17,"municipalRate":0}

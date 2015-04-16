@@ -1,1 +1,1 @@
-{"fiscalType":"ncm","state":"am","code":"36010000","effectiveDate":"2015-01-01","federalNationalRate":28.94,"federalImportedRate":37.84,"stateRate":17,"municipalRate":0,"version":"15.1.C","source":"IBPT"}
+{"fiscalType":"ncm","state":"am","source":"IBPT","version":"15.1.C","code":"36010000","effectiveDate":"2015-01-01","federalNationalRate":28.94,"federalImportedRate":37.84,"stateRate":17,"municipalRate":0}

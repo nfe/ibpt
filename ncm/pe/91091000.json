@@ -1,1 +1,1 @@
-{"fiscalType":"ncm","state":"pe","code":"91091000","effectiveDate":"2015-01-01","federalNationalRate":25.7,"federalImportedRate":37.51,"stateRate":17,"municipalRate":0,"version":"15.1.C","source":"IBPT"}
+{"fiscalType":"ncm","state":"pe","source":"IBPT","version":"15.1.C","code":"91091000","effectiveDate":"2015-01-01","federalNationalRate":25.7,"federalImportedRate":37.51,"stateRate":17,"municipalRate":0}

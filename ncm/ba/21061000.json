@@ -1,1 +1,1 @@
-{"fiscalType":"ncm","state":"ba","code":"21061000","effectiveDate":"2015-01-01","federalNationalRate":13.45,"federalImportedRate":26.33,"stateRate":12,"municipalRate":0,"version":"15.1.C","source":"IBPT"}
+{"fiscalType":"ncm","state":"ba","source":"IBPT","version":"15.1.C","code":"21061000","effectiveDate":"2015-01-01","federalNationalRate":13.45,"federalImportedRate":26.33,"stateRate":12,"municipalRate":0}

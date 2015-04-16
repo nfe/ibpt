@@ -1,1 +1,1 @@
-{"fiscalType":"ncm","state":"am","code":"90172000","effectiveDate":"2015-01-01","federalNationalRate":8.11,"federalImportedRate":13.29,"stateRate":4,"municipalRate":0,"version":"15.1.C","source":"IBPT"}
+{"fiscalType":"ncm","state":"am","source":"IBPT","version":"15.1.C","code":"90172000","effectiveDate":"2015-01-01","federalNationalRate":8.11,"federalImportedRate":13.29,"stateRate":4,"municipalRate":0}

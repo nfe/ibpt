@@ -17,14 +17,14 @@ var toEnglish = function(state, data) {
   return {
     fiscalType: (data.tipo == 1) ? 'nbs' : 'ncm',
     state: state,
+    source: data.fonte,
+    version: data.versao,
     code: data.codigo,
     effectiveDate: toISOString(data.vigenciainicio),
     federalNationalRate: parseFloat(data.nacionalfederal),
     federalImportedRate: parseFloat(data.importadosfederal),
     stateRate: parseFloat(data.estadual),
-    municipalRate: parseFloat(data.municipal),
-    version: data.versao,
-    source: data.fonte
+    municipalRate: parseFloat(data.municipal)
   };
 };
 

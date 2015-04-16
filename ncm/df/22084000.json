@@ -1,1 +1,1 @@
-{"fiscalType":"ncm","state":"df","code":"22084000","effectiveDate":"2015-01-01","federalNationalRate":35.87,"federalImportedRate":46.43,"stateRate":19.06,"municipalRate":0,"version":"15.1.C","source":"IBPT"}
+{"fiscalType":"ncm","state":"df","source":"IBPT","version":"15.1.C","code":"22084000","effectiveDate":"2015-01-01","federalNationalRate":35.87,"federalImportedRate":46.43,"stateRate":19.06,"municipalRate":0}

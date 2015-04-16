@@ -1,1 +1,1 @@
-{"fiscalType":"ncm","state":"ro","code":"95064000","effectiveDate":"2015-01-01","federalNationalRate":25.34,"federalImportedRate":37.83,"stateRate":17,"municipalRate":0,"version":"15.1.C","source":"IBPT"}
+{"fiscalType":"ncm","state":"ro","source":"IBPT","version":"15.1.C","code":"95064000","effectiveDate":"2015-01-01","federalNationalRate":25.34,"federalImportedRate":37.83,"stateRate":17,"municipalRate":0}

@@ -1,1 +1,1 @@
-{"fiscalType":"ncm","state":"ap","code":"84336090","effectiveDate":"2015-01-01","federalNationalRate":13.45,"federalImportedRate":19.01,"stateRate":5.6,"municipalRate":0,"version":"15.1.B","source":"IBPT"}
+{"fiscalType":"ncm","state":"ap","source":"IBPT","version":"15.1.B","code":"84336090","effectiveDate":"2015-01-01","federalNationalRate":13.45,"federalImportedRate":19.01,"stateRate":5.6,"municipalRate":0}

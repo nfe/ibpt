@@ -1,1 +1,1 @@
-{"fiscalType":"ncm","state":"to","code":"72163300","effectiveDate":"2015-01-01","federalNationalRate":13.45,"federalImportedRate":21.55,"stateRate":17,"municipalRate":0,"version":"15.1.C","source":"IBPT"}
+{"fiscalType":"ncm","state":"to","source":"IBPT","version":"15.1.C","code":"72163300","effectiveDate":"2015-01-01","federalNationalRate":13.45,"federalImportedRate":21.55,"stateRate":17,"municipalRate":0}

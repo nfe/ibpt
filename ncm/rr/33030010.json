@@ -1,1 +1,1 @@
-{"fiscalType":"ncm","state":"rr","code":"33030010","effectiveDate":"2015-01-01","federalNationalRate":34.15,"federalImportedRate":45.43,"stateRate":25,"municipalRate":0,"version":"15.1.C","source":"IBPT"}
+{"fiscalType":"ncm","state":"rr","source":"IBPT","version":"15.1.C","code":"33030010","effectiveDate":"2015-01-01","federalNationalRate":34.15,"federalImportedRate":45.43,"stateRate":25,"municipalRate":0}

@@ -1,1 +1,1 @@
-{"fiscalType":"ncm","state":"ap","code":"20096900","effectiveDate":"2015-01-01","federalNationalRate":13.45,"federalImportedRate":21.17,"stateRate":17,"municipalRate":0,"version":"15.1.B","source":"IBPT"}
+{"fiscalType":"ncm","state":"ap","source":"IBPT","version":"15.1.B","code":"20096900","effectiveDate":"2015-01-01","federalNationalRate":13.45,"federalImportedRate":21.17,"stateRate":17,"municipalRate":0}

@@ -1,1 +1,1 @@
-{"fiscalType":"ncm","state":"ms","code":"22060010","effectiveDate":"2015-01-01","federalNationalRate":19.9,"federalImportedRate":32.33,"stateRate":27,"municipalRate":0,"version":"15.1.C","source":"IBPT"}
+{"fiscalType":"ncm","state":"ms","source":"IBPT","version":"15.1.C","code":"22060010","effectiveDate":"2015-01-01","federalNationalRate":19.9,"federalImportedRate":32.33,"stateRate":27,"municipalRate":0}

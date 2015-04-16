@@ -1,1 +1,1 @@
-{"fiscalType":"ncm","state":"pr","code":"33042090","effectiveDate":"2015-01-01","federalNationalRate":31.48,"federalImportedRate":47.33,"stateRate":25,"municipalRate":0,"version":"15.1.C","source":"IBPT"}
+{"fiscalType":"ncm","state":"pr","source":"IBPT","version":"15.1.C","code":"33042090","effectiveDate":"2015-01-01","federalNationalRate":31.48,"federalImportedRate":47.33,"stateRate":25,"municipalRate":0}

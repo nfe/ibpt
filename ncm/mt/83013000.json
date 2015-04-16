@@ -1,1 +1,1 @@
-{"fiscalType":"ncm","state":"mt","code":"83013000","effectiveDate":"2015-01-01","federalNationalRate":20.26,"federalImportedRate":31.19,"stateRate":17,"municipalRate":0,"version":"15.1.C","source":"IBPT"}
+{"fiscalType":"ncm","state":"mt","source":"IBPT","version":"15.1.C","code":"83013000","effectiveDate":"2015-01-01","federalNationalRate":20.26,"federalImportedRate":31.19,"stateRate":17,"municipalRate":0}
