@@ -1,73 +1,78 @@
-
 var csv = require("fast-csv"),
     fs = require("fs"),
     iconvlite = require('iconv-lite'),
-    path = require("path")
+    path = require("path"),
     util = require("util");
 
-var states = ["AC","AL","AM","AP","BA","CE","DF","ES","GO","MA","MG","MS","MT","PA","PB","PE","PI","PR","RJ","RN","RO","RR","RS","SC","SE","SP","TO"];
+var states = ["ac", "al", "am", "ap", "ba", "ce", "df", "es", "go", "ma", "mg",
+              "ms", "mt", "pa", "pb", "pe", "pi", "pr", "rj", "rn", "ro", "rr",
+              "rs", "sc", "se", "sp", "to"];
 
-var convertDateToISOString = function(date) {
+var toISOString = function(date) {
   var a = date.split('/');
   return a[2] + "-" + a[1] + "-" + a[0];
 };
 
+var toEnglish = function(state, data) {
+  return {
+    fiscalType: (data.tipo == 1) ? 'nbs' : 'ncm',
+    state: state,
+    code: data.codigo,
+    effectiveDate: toISOString(data.vigenciainicio),
+    federalNationalRate: data.nacionalfederal,
+    federalImportedRate: data.importadosfederal,
+    stateRate: data.estadual,
+    municipalRate: data.municipal,
+    version: data.versao,
+    source: data.fonte
+  };
+};
+
+var writeFile = function(data) {
+  var path = util.format('%s/%s/%s.json', data.fiscalType, data.state, data.code);
+  fs.writeFileSync(path, iconvlite.encode(JSON.stringify(data), 'UTF-8'));
+};
+
 states.forEach(function(state) {
 
+  // create folders to json files
   fs.mkdir("ncm/" + state.toLowerCase(), function(e) {});
   fs.mkdir("nbs/" + state.toLowerCase(), function(e) {});
 
-  var fileName = "tabelas/TabelaIBPTax" + state + "15.1.C.csv";
+  var fileName = "raw-data/TabelaIBPTax" + state.toUpperCase() + "15.1.C.csv";
 
-  var content = fs.readFile(fileName, function (err, data) {
+  fs.readFile(fileName, function(err, data) {
 
-    if (err)
-    {
-      console.log("Reading file ", fileName, err);
+    if (err) {
+      console.error("ERROR: Reading file ", fileName, err);
       throw err;
     }
 
     console.log("Processing file " + fileName);
 
-    var string = iconvlite.decode(data, 'ISO-8859-1');
-
     csv
-     .fromString(string, {
-       headers : ["codigo",
-                  "ex",
-                  "tipo",
-                  "descricao",
-                  "nacionalfederal",
-                  "importadosfederal",
-                  "estadual",
-                  "municipal",
-                  "vigenciainicio",
-                  "vigenciafim",
-                  "chave",
-                  "versao",
-                  "fonte"],
-       quoteColumns: false, ignoreEmpty:true, quote:null, delimiter:';'
-     })
-     .on("error", function(err) {
-       console.log(fileName, err);
-       throw err;
-     })
-     .on("data", function(data) {
-       // convert date to iso 8601
-       data.vigenciainicio = convertDateToISOString(data.vigenciainicio);
-       data.vigenciafim = convertDateToISOString(data.vigenciafim);
+      .fromString(iconvlite.decode(data, 'ISO-8859-1'), {
+        headers: ["codigo", "ex", "tipo", "descricao", "nacionalfederal",
+                  "importadosfederal", "estadual", "municipal",
+                  "vigenciainicio", "vigenciafim", "chave", "versao", "fonte"],
+        quoteColumns: false,
+        ignoreEmpty: true,
+        quote: null,
+        delimiter: ';'
+      })
+      .on("error", function(err) {
+        console.error("ERROR: Parsing file " + fileName, err);
+      })
+      .on("data", function(data) {
+        // we only need to process the types
+        if (data.tipo != 1 && data.tipo != 0)
+          return;
 
-       var type = (data.tipo == 1)
-                  ? 'nbs'
-                  : 'ncm';
-       var filePath = util.format('%s/%s/%s.json', type, state.toLowerCase(), data.codigo);
-       var data = iconvlite.encode(JSON.stringify(data), 'UTF-8')
-
-       fs.writeFileSync(filePath, data);
-     })
-     .on("end", function(){
-         console.log("Processed file " + fileName);
-     });
+        writeFile(toEnglish(state, data));
+      })
+      .on("end", function() {
+        console.log("Processed file " + fileName);
+      });
 
   }); // end of csv
 
