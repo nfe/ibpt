@@ -19,10 +19,10 @@ var toEnglish = function(state, data) {
     state: state,
     code: data.codigo,
     effectiveDate: toISOString(data.vigenciainicio),
-    federalNationalRate: data.nacionalfederal,
-    federalImportedRate: data.importadosfederal,
-    stateRate: data.estadual,
-    municipalRate: data.municipal,
+    federalNationalRate: parseFloat(data.nacionalfederal),
+    federalImportedRate: parseFloat(data.importadosfederal),
+    stateRate: parseFloat(data.estadual),
+    municipalRate: parseFloat(data.municipal),
     version: data.versao,
     source: data.fonte
   };
