@@ -14,8 +14,22 @@ var toISOString = function(date) {
 };
 
 var toEnglish = function(state, data) {
+  var fiscalType = '';
+
+  switch (data.tipo.toString()) {
+    case '0':
+      fiscalType = 'ncm';
+      break;
+    case '1':
+      fiscalType = 'nbs';
+      break;
+    case '2':
+      fiscalType = 'lc116';
+      break;
+  }
+
   return {
-    fiscalType: (data.tipo == 1) ? 'nbs' : 'ncm',
+    fiscalType: fiscalType,
     state: state,
     source: data.fonte,
     version: data.versao,
@@ -38,23 +52,18 @@ states.forEach(function(state) {
   // create folders to json files
   fs.mkdir("ncm/" + state.toLowerCase(), function(e) {});
   fs.mkdir("nbs/" + state.toLowerCase(), function(e) {});
+  fs.mkdir("lc116/" + state.toLowerCase(), function(e) {});
 
-  var fileName = "raw-data/TabelaIBPTax" + state.toUpperCase() + "15.1.C.csv";
+  var fileName = "raw-data/TabelaIBPTax" + state.toUpperCase() + "15.2.A.csv";
 
-  fs.readFile(fileName, function(err, data) {
+  var readStream = fs.createReadStream(fileName)
+                     .pipe(iconvlite.decodeStream('ISO-8859-1'));
 
-    if (err) {
-      console.error("ERROR: Reading file ", fileName, err);
-      throw err;
-    }
-
-    console.log("Processing file " + fileName);
-
-    csv
-      .fromString(iconvlite.decode(data, 'ISO-8859-1'), {
-        headers: ["codigo", "ex", "tipo", "descricao", "nacionalfederal",
-                  "importadosfederal", "estadual", "municipal",
-                  "vigenciainicio", "vigenciafim", "chave", "versao", "fonte"],
+  csv.fromStream(readStream, {
+        headers: ["codigo", "ex", "tipo", "descricao",
+                  "nacionalfederal", "importadosfederal",
+                  "estadual", "municipal", "vigenciainicio",
+                  "vigenciafim", "chave", "versao", "fonte"],
         quoteColumns: false,
         ignoreEmpty: true,
         quote: null,
@@ -65,7 +74,7 @@ states.forEach(function(state) {
       })
       .on("data", function(data) {
         // we only need to process the types
-        if (data.tipo != 1 && data.tipo != 0)
+        if (data.tipo != 1 && data.tipo != 0 && data.tipo != 2)
           return;
 
         writeFile(toEnglish(state, data));
@@ -73,7 +82,5 @@ states.forEach(function(state) {
       .on("end", function() {
         console.log("Processed file " + fileName);
       });
-
-  }); // end of csv
 
 }); // end of state
