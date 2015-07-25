@@ -45,12 +45,23 @@ glob("nbs/**/*.json", null, function (er, files) {
 });
 
 // upload ncm json files
-// glob("ncm/**/*.json", null, function (er, files) {
-//   opts.containerName = 'ncm';
-//   deploy(opts, mapFilesToDeploy(files), logger, function(err){
-//       if(err) {
-//           console.log("Error deploying", err);
-//       }
-//       console.log('Job\'s done!');
-//   });
-// });
+glob("ncm/**/*.json", null, function (er, files) {
+  opts.containerName = 'ncm';
+  deploy(opts, mapFilesToDeploy(files), logger, function(err){
+      if(err) {
+          console.log("Error deploying", err);
+      }
+      console.log('Job\'s done!');
+  });
+});
+
+// upload ncm json files
+glob("lc116/**/*.json", null, function (er, files) {
+  opts.containerName = 'lc116';
+  deploy(opts, mapFilesToDeploy(files), logger, function(err){
+      if(err) {
+          console.log("Error deploying", err);
+      }
+      console.log('Job\'s done!');
+  });
+});
