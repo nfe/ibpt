@@ -1,5 +1,5 @@
-IBPT - De Olho no Impostos
-==========================
+IBPT - De Olho no Imposto
+=========================
 
 O Código de Defesa do Consumidor estabelece que você deve incluir em documentos fiscais concedidos aos consumidores o montante total aproximado de governos federal, estaduais e impostos municipais incidentes sobre a venda de bens ou serviços.
 
