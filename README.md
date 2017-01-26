@@ -31,6 +31,11 @@ Como utilizar?
 
 ##### http://ibpt.nfe.io/nbs/sp/101011000.json
 
+Autores
+-------
+[Equipe NFe.io](https://nfe.io)
+
+
 Approximate Taxes - IBPT
 ======================
 
@@ -61,3 +66,9 @@ How to use?
 ##### http://ibpt.nfe.io/ncm/sp/90303311.json
 
 ##### http://ibpt.nfe.io/nbs/sp/101011000.json
+
+Authors
+-------
+[NFe.io Team](https://nfe.io)
+
+
