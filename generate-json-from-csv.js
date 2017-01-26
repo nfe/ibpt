@@ -4,15 +4,22 @@ var csv = require("fast-csv"),
     path = require("path"),
     util = require("util");
 
+// constant of version
+var version = "17.1.A";
+
+// constant of states
 var states = ["ac", "al", "am", "ap", "ba", "ce", "df", "es", "go", "ma", "mg",
               "ms", "mt", "pa", "pb", "pe", "pi", "pr", "rj", "rn", "ro", "rr",
               "rs", "sc", "se", "sp", "to"];
 
+// converts date to ISO date format
 var toISOString = function(date) {
   var a = date.split('/');
   return a[2] + "-" + a[1] + "-" + a[0];
 };
 
+// converts the data from csv from
+// portuguese fields to english fields
 var toEnglish = function(state, data) {
   var fiscalType = '';
 
@@ -42,6 +49,7 @@ var toEnglish = function(state, data) {
   };
 };
 
+// writes the json file based on the data
 var writeFile = function(data) {
   var path = util.format('%s/%s/%s.json', data.fiscalType, data.state, data.code);
   fs.writeFileSync(path, iconvlite.encode(JSON.stringify(data), 'UTF-8'));
@@ -54,7 +62,7 @@ states.forEach(function(state) {
   fs.mkdir("nbs/" + state.toLowerCase(), function(e) {});
   fs.mkdir("lc116/" + state.toLowerCase(), function(e) {});
 
-  var fileName = "raw-data/TabelaIBPTax" + state.toUpperCase() + "16.2.A.csv";
+  var fileName = "raw-data/TabelaIBPTax" + state.toUpperCase() + version + ".csv";
 
   var readStream = fs.createReadStream(fileName)
                      .pipe(iconvlite.decodeStream('ISO-8859-1'));

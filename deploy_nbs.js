@@ -45,8 +45,9 @@ states.forEach(function(state) {
     deploy(opts, mapFilesToDeploy(files), logger, function(err){
         if(err) {
             console.log('error: nbs upload job ' + state, err);
+        } else {
+          console.log('ok: nbs upload job ' + state);
         }
-        console.log('ok: nbs upload job ' + state);
     });
 
     console.log('queued nbs jobs to state ' + state);
