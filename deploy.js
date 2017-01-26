@@ -17,7 +17,7 @@ var opts = {
     containerName: null, // container name in blob
     containerOptions: { publicAccessLevel: "blob" }, // container options
     folder: '', // path within container
-    deleteExistingBlobs: true, // true means recursively deleting anything under folder
+    deleteExistingBlobs: false, // true means recursively deleting anything under folder
     concurrentUploadThreads: 50, // number of concurrent uploads, choose best for your network condition
     zip: true, // gzip files if they become smaller after zipping, content-encoding header will change if file is zipped
     metadata: { cacheControl: 'public, max-age=31556926' }, // metadata for each uploaded file
@@ -27,41 +27,58 @@ var opts = {
 var mapFilesToDeploy = function(files) {
   return files.map(function(item) {
     return {
-      cwd: item.substring(0, 3),
+      base: item.substring(0, 3),
       path: item
     };
   });
 };
 
-// upload nbs json files
-glob("nbs/**/*.json", null, function (er, files) {
-  opts.containerName = 'nbs';
-  deploy(opts, mapFilesToDeploy(files), logger, function(err){
-      if(err) {
-          console.log("Error deploying", err);
-      }
-      console.log('Job\'s done!');
-  });
-});
+var states = ["ac", "al", "am", "ap", "ba", "ce", "df", "es", "go", "ma", "mg",
+              "ms", "mt", "pa", "pb", "pe", "pi", "pr", "rj", "rn", "ro", "rr",
+              "rs", "sc", "se", "sp", "to"];
 
-// upload ncm json files
-glob("ncm/**/*.json", null, function (er, files) {
-  opts.containerName = 'ncm';
-  deploy(opts, mapFilesToDeploy(files), logger, function(err){
-      if(err) {
-          console.log("Error deploying", err);
-      }
-      console.log('Job\'s done!');
-  });
-});
+// 
+// states.forEach(function(state) {
+//
+//   // upload nbs json files
+//   glob("nbs/" + state + "/*.json", null, function (er, files) {
+//     opts.containerName = 'nbs';
+//     deploy(opts, mapFilesToDeploy(files), logger, function(err){
+//         if(err) {
+//             console.log("error: nbs upload job", err);
+//         }
+//         console.log('ok: nbs upload job');
+//     });
+//   });
+//
+// });
+//
+// states.forEach(function(state) {
+//
+//   // upload ncm json files
+//   glob("ncm/" + state + "/*.json", null, function (er, files) {
+//     opts.containerName = 'ncm';
+//     deploy(opts, mapFilesToDeploy(files), logger, function(err){
+//         if(err) {
+//             console.log("error: ncm upload job", err);
+//         }
+//         console.log('ok: ncm upload job');
+//     });
+//   });
+//
+// });
 
-// upload ncm json files
-glob("lc116/**/*.json", null, function (er, files) {
-  opts.containerName = 'lc116';
-  deploy(opts, mapFilesToDeploy(files), logger, function(err){
-      if(err) {
-          console.log("Error deploying", err);
-      }
-      console.log('Job\'s done!');
+states.forEach(function(state) {
+
+  // upload lc116 json files
+  glob("lc116/" + state + "/*.json", null, function (er, files) {
+    opts.containerName = 'lc116';
+    deploy(opts, mapFilesToDeploy(files), logger, function(err){
+        if(err) {
+            console.log("error: lc116 upload job", err);
+        }
+        console.log('ok: lc116 upload job');
+    });
   });
+
 });

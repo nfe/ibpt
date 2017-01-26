@@ -54,7 +54,7 @@ states.forEach(function(state) {
   fs.mkdir("nbs/" + state.toLowerCase(), function(e) {});
   fs.mkdir("lc116/" + state.toLowerCase(), function(e) {});
 
-  var fileName = "raw-data/TabelaIBPTax" + state.toUpperCase() + "16.1.A.csv";
+  var fileName = "raw-data/TabelaIBPTax" + state.toUpperCase() + "16.2.A.csv";
 
   var readStream = fs.createReadStream(fileName)
                      .pipe(iconvlite.decodeStream('ISO-8859-1'));
