@@ -45,8 +45,9 @@ states.forEach(function(state) {
     deploy(opts, mapFilesToDeploy(files), logger, function(err){
         if(err) {
             console.log('error: ncm upload job ' + state, err);
+        } else {
+          console.log('ok: ncm upload job ' + state);
         }
-        console.log('ok: ncm upload job ' + state);
     });
 
     console.log('queued jobs to state ' + state);
