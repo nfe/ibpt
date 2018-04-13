@@ -4,11 +4,11 @@
   "description": "",
   "main": "index.js",
   "dependencies": {
+    "deploy-azure-cdn": "^1.2.0",
     "dotenv": "^1.1.0",
     "fast-csv": "^0.5.5",
-    "iconv-lite": "^0.4.7",
-    "deploy-azure-cdn": "^1.0.1",
-    "glob": "^5.0.5"
+    "glob": "^5.0.5",
+    "iconv-lite": "^0.4.7"
   },
   "scripts": {
   },
