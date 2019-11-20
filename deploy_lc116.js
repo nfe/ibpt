@@ -3,7 +3,7 @@ var glob = require("glob");
 
 // load environment variables from .env
 if (require("fs").existsSync(".env")) {
-  require("dotenv").load();
+  require("dotenv").config();
 }
 
 // environment variables
