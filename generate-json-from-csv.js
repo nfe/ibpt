@@ -5,7 +5,7 @@ var csv = require("fast-csv"),
   util = require("util");
 
 // constant of version
-var version = "18.2.B";
+var version = "19.2.B";
 
 // constant of states
 var states = ["ac", "al", "am", "ap", "ba", "ce", "df", "es", "go", "ma", "mg",
