@@ -1,8 +1,11 @@
 {
-  "_comment": "Itens da LC116 incluídos pela LC 157/2016 que não existem na tabela do IBPT. O gerador cria lc116/{uf}/{codigo}.json com as alíquotas do código NBS correspondente, conforme a tabela de correlação LC116 x NBS (docs/lc116NbsCorrelationTable-pt-br.json do dfetech-service-invoice-api). nbs = null: sem correlação conhecida, o arquivo existente é mantido como está.",
+  "_comment": "Códigos LC116 que não existem na tabela do IBPT. Com nbs, o gerador cria lc116/{uf}/{codigo}.json com as alíquotas desse NBS, conforme a tabela de correlação LC116 x NBS (docs/lc116NbsCorrelationTable-pt-br.json do dfetech-service-invoice-api). Com nbs = null, o arquivo é manual: o gerador mantém os existentes (inclusive com --clean) e o publish-r2.js nunca os apaga do bucket.",
   "0109": { "nbs": null, "description": "Disponibilização de conteúdos de áudio, vídeo, imagem e texto pela internet (sem correlação NBS na tabela)" },
   "0606": { "nbs": "126029000", "description": "Aplicação de tatuagens, piercings e congêneres" },
+  "1105": { "nbs": "118023000", "description": "Vigilância, segurança ou monitoramento de bens, pessoas e semoventes" },
   "1602": { "nbs": "104019000", "description": "Outros serviços de transporte de natureza municipal" },
   "1725": { "nbs": "114063300", "description": "Inserção de textos, desenhos e outros materiais de propaganda e publicidade, em qualquer meio" },
-  "2505": { "nbs": "126030000", "description": "Cessão de uso de espaços em cemitérios para sepultamento" }
+  "2505": { "nbs": "126030000", "description": "Cessão de uso de espaços em cemitérios para sepultamento" },
+  "9901": { "nbs": null, "description": "Código genérico (não é item da LC 116), criado à mão para algumas UFs" },
+  "9999": { "nbs": null, "description": "Código genérico (não é item da LC 116), criado à mão para algumas UFs" }
 }
