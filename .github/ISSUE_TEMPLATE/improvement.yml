@@ -1,0 +1,76 @@
+name: Improvement
+type: Improvement
+description: Otimizacao de algo existente que ja funciona. Use para reduzir latencia, simplificar fluxo, melhorar UX, refatorar com ganho mensuravel.
+title: "<verbo + objeto + qualificador>"
+labels: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        > Template placeholder publicado por `nfe:create-issue` (bootstrap). Sera substituido
+        > pelo canonico de `nfe/.github/.github/ISSUE_TEMPLATE/improvement.yml` no proximo sync
+        > do provisioner em `nfe/.github#20`.
+  - type: textarea
+    id: origem
+    attributes:
+      label: Origem
+      placeholder: "> Origem: @fulano via Slack #canal-x — https://..."
+    validations:
+      required: true
+  - type: textarea
+    id: contexto
+    attributes:
+      label: Contexto
+      description: "Como o sistema funciona hoje? Qual o baseline atual (numero, threshold)?"
+    validations:
+      required: true
+  - type: textarea
+    id: objetivo
+    attributes:
+      label: Objetivo
+      description: "Qual a melhoria esperada? Quantifique (ex: p95 de 800ms para <300ms)."
+    validations:
+      required: true
+  - type: textarea
+    id: criterios-aceitacao
+    attributes:
+      label: Criterios de aceitacao
+      description: "Inclua a metrica concreta com valor alvo."
+    validations:
+      required: true
+  - type: textarea
+    id: dependencias
+    attributes:
+      label: Dependencias
+      value: "Nenhuma"
+    validations:
+      required: true
+  - type: textarea
+    id: referencias
+    attributes:
+      label: Referencias
+      description: "Dashboards, benchmarks, threads, PRs. Minimo 1."
+    validations:
+      required: true
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Priority
+      options:
+        - Critical
+        - High
+        - Medium
+        - Low
+    validations:
+      required: true
+  - type: dropdown
+    id: compliance
+    attributes:
+      label: Compliance
+      options:
+        - "Nao"
+        - "Vigente"
+        - "<90d"
+        - ">90d"
+    validations:
+      required: true
