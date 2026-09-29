@@ -7,7 +7,7 @@
     "@aws-sdk/client-s3": "^3.1142.0",
     "deploy-azure-cdn": "^2.1.0",
     "dotenv": "^8.2.0",
-    "fast-csv": "^3.4.0",
+    "fast-csv": "^4.3.6",
     "glob": "^7.1.6",
     "iconv-lite": "^0.5.0"
   },
