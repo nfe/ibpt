@@ -1,0 +1,123 @@
+name: Publish IBPT tables
+
+# Publishes lc116/, nbs/ and ncm/ to the Cloudflare R2 bucket "ibpt", served at
+# https://ibpt.nfe.io, with publish-r2.js (see docs/atualizacao-tabela-ibpt.md).
+#
+# - push to master: publishes (--apply) only what changed
+# - pull request: dry-run, shows what would be uploaded and deleted
+# - manual run: dry-run by default, with options to apply and to allow mass deletes
+#
+# Requires the repository secrets R2_ACCOUNT_ID, R2_ACCESS_KEY_ID and
+# R2_SECRET_ACCESS_KEY (R2 API token with Object Read & Write on the "ibpt" bucket).
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - "lc116/**"
+      - "nbs/**"
+      - "ncm/**"
+      - "lc116-nbs-map.json"
+      - "publish-r2.js"
+      - "lib/**"
+      - "package.json"
+      - "package-lock.json"
+      - ".github/workflows/publish.yml"
+  pull_request:
+    branches: [master]
+    paths:
+      - "lc116/**"
+      - "nbs/**"
+      - "ncm/**"
+      - "lc116-nbs-map.json"
+      - "publish-r2.js"
+      - "lib/**"
+      - "package.json"
+      - "package-lock.json"
+      - ".github/workflows/publish.yml"
+  workflow_dispatch:
+    inputs:
+      tables:
+        description: "Tables to publish (comma separated)"
+        default: "lc116,nbs,ncm"
+        required: true
+      apply:
+        description: "Publish for real (unchecked = dry-run)"
+        type: boolean
+        default: false
+      allow_mass_delete:
+        description: "Allow deleting more than 25% of a table (new IBPT version dropping many codes)"
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+# never two publishes at the same time; a newer push waits for the running one
+concurrency:
+  group: publish-ibpt
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    # pull requests from forks have no access to the secrets
+    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    env:
+      R2_ACCOUNT_ID: ${{ secrets.R2_ACCOUNT_ID }}
+      R2_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
+      R2_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+      EVENT_NAME: ${{ github.event_name }}
+      INPUT_TABLES: ${{ inputs.tables }}
+      INPUT_APPLY: ${{ inputs.apply }}
+      INPUT_ALLOW_MASS_DELETE: ${{ inputs.allow_mass_delete }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          lfs: false
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci --no-audit --no-fund
+
+      - name: Publish
+        shell: bash
+        run: |
+          set -o pipefail
+
+          if [ -z "$R2_ACCESS_KEY_ID" ] || [ -z "$R2_SECRET_ACCESS_KEY" ] || [ -z "$R2_ACCOUNT_ID" ]; then
+            if [ "$EVENT_NAME" = "pull_request" ]; then
+              echo "::warning::R2 secrets are not configured, skipping the dry-run"
+              exit 0
+            fi
+            echo "::error::R2 secrets are not configured (R2_ACCOUNT_ID, R2_ACCESS_KEY_ID, R2_SECRET_ACCESS_KEY)"
+            exit 1
+          fi
+
+          args=(--tables "${INPUT_TABLES:-lc116,nbs,ncm}")
+
+          if [ "$EVENT_NAME" = "push" ] || [ "$INPUT_APPLY" = "true" ]; then
+            args+=(--apply)
+          fi
+
+          if [ "$INPUT_ALLOW_MASS_DELETE" = "true" ]; then
+            args+=(--allow-mass-delete)
+          fi
+
+          node publish-r2.js "${args[@]}" 2>&1 | tee publish.log
+
+      - name: Summary
+        if: always()
+        shell: bash
+        run: |
+          [ -f publish.log ] || exit 0
+          {
+            echo '### Publish IBPT tables'
+            echo '```'
+            grep -vE '^  [a-z0-9]+: (uploaded|compared|listed) ' publish.log
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"

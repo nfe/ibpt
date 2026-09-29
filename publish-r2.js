@@ -64,8 +64,11 @@ var localFiles = function (table) {
 
 var gzipFile = function (file) {
   // gzipSync writes mtime 0 in the header, so the output (and the md5 used as
-  // R2 etag) only changes when the content changes
+  // R2 etag) only changes when the content changes. The OS byte of the header
+  // depends on the platform zlib was built for (3 on linux, 10 on windows), so
+  // it is fixed to 255 (unknown) to get the same etag on any machine
   var body = zlib.gzipSync(fs.readFileSync(file), { level: 9 });
+  body[9] = 255;
   return { body: body, md5: crypto.createHash("md5").update(body).digest("hex") };
 };
 

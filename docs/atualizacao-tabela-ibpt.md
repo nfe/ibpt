@@ -106,7 +106,30 @@ migrado do Azure em 14 e 15/09/2026. Os objetos ficam comprimidos (`Content-Enco
 O bucket também tem o prefixo `data/`, com dados públicos que não vêm deste repositório
 (cidades, estados, CFOP, países). **A publicação nunca pode tocar nesse prefixo.**
 
-A publicação usa `publish-r2.js`, com um token de API do R2 com escrita no bucket `ibpt`:
+### GitHub Action
+
+A publicação é feita pelo workflow `.github/workflows/publish.yml` (**Publish IBPT tables**):
+
+- **push na `master`** que altere `lc116/`, `nbs/`, `ncm/`, `lc116-nbs-map.json` ou o script:
+  publica (`--apply`) só o que mudou;
+- **pull request** para a `master`: roda a simulação e mostra no resumo do job o que seria enviado
+  e apagado;
+- **execução manual** (Actions → Publish IBPT tables → Run workflow): simulação por padrão, com as
+  opções `apply` e `allow_mass_delete`. Use a segunda quando uma versão nova do IBPT remover mais
+  de 25% dos códigos de uma tabela: o push falha na trava, e a execução manual libera.
+
+Duas publicações nunca rodam ao mesmo tempo. O workflow precisa dos secrets `R2_ACCOUNT_ID`,
+`R2_ACCESS_KEY_ID` e `R2_SECRET_ACCESS_KEY` no repositório (token de API do R2, sem expiração, com
+Object Read & Write só no bucket `ibpt`). Sem eles, a simulação do PR é pulada com um aviso e o push
+falha.
+
+Fluxo de uma versão nova: gerar os JSONs com o gerador, abrir PR (a simulação mostra o impacto no
+bucket), revisar e fazer o merge (o Action publica).
+
+### Publicação manual
+
+O `publish-r2.js` também pode ser rodado localmente, com um token de API do R2 com escrita no
+bucket `ibpt`:
 
 ```sh
 export R2_ACCOUNT_ID=... R2_ACCESS_KEY_ID=... R2_SECRET_ACCESS_KEY=...   # ou .env
@@ -116,8 +139,9 @@ node publish-r2.js --tables lc116,nbs,ncm --apply   # publica
 ```
 
 - Envia apenas os arquivos cujo conteúdo mudou, comparando o md5 do gzip com o ETag do objeto.
-  Na primeira publicação tudo é reenviado, porque os objetos migrados do Azure foram comprimidos
-  de outra forma.
+  O gzip é gerado igual em qualquer sistema operacional (byte de SO do cabeçalho fixado em 255).
+  A primeira execução depois dessa mudança reenvia tudo uma vez, porque a publicação de 29/09/2026
+  foi feita do Windows com outro byte de SO.
 - Apaga do bucket os arquivos `{tabela}/{uf}/{codigo}.json` que não existem mais localmente.
   Use `--no-delete` para manter esses arquivos.
 - Só lista e altera as chaves dos prefixos das tabelas escolhidas. `data/` e qualquer outro
