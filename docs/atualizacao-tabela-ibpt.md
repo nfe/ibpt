@@ -90,13 +90,38 @@ excluiu não fiquem para trás.
 
 ## Publicação
 
-Os `deploy_lc116.js` / `deploy_nbs.js` publicam no Azure Blob, mas `ibpt.nfe.io` hoje responde
-por outra origem, na Cloudflare, e a 21.1.F foi publicada fora deste repositório. Antes de publicar,
-identifique essa origem (DNS/Workers/R2 da zona `nfe.io` na Cloudflare) e publique nela.
-Depois de publicar, limpe o cache da Cloudflare e confira em `https://ibpt.nfe.io` pelo menos
-`nbs/sp/114063300.json` e uma amostra de cada estado, validando o campo `version`.
+`https://ibpt.nfe.io` é o custom domain do bucket R2 **`ibpt`** da conta Cloudflare NFE.io,
+migrado do Azure em 14 e 15/09/2026. Os objetos ficam comprimidos (`Content-Encoding: gzip`,
+`Content-Type: application/json`). Nenhuma cache rule da zona se aplica a esse domínio
+(`cf-cache-status: DYNAMIC`), então não é preciso fazer purge depois de publicar.
 
-> **Migração Azure → GCP:** os arquivos são consumidos via `https://ibpt.nfe.io` (Cloudflare) pelo
-> `ApproximateTaxesRepository` do `dfetech-service-invoice-api`. Na migração, as tabelas `lc116`,
-> `nbs` e `ncm` e os scripts de deploy precisam ir para o novo storage, e a origem de `ibpt.nfe.io`
-> na Cloudflare precisa ser apontada para ele. Assim o `IbptApi__BaseAddress` não muda.
+O bucket também tem o prefixo `data/`, com dados públicos que não vêm deste repositório
+(cidades, estados, CFOP, países). **A publicação nunca pode tocar nesse prefixo.**
+
+A publicação usa `publish-r2.js`, com um token de API do R2 com escrita no bucket `ibpt`:
+
+```sh
+export R2_ACCOUNT_ID=... R2_ACCESS_KEY_ID=... R2_SECRET_ACCESS_KEY=...   # ou .env
+
+node publish-r2.js --tables lc116,nbs,ncm           # simulação: só mostra o que faria
+node publish-r2.js --tables lc116,nbs,ncm --apply   # publica
+```
+
+- Envia apenas os arquivos cujo conteúdo mudou, comparando o md5 do gzip com o ETag do objeto.
+  Na primeira publicação tudo é reenviado, porque os objetos migrados do Azure foram comprimidos
+  de outra forma.
+- Apaga do bucket os arquivos `{tabela}/{uf}/{codigo}.json` que não existem mais localmente.
+  Use `--no-delete` para manter esses arquivos.
+- Só lista e altera as chaves dos prefixos das tabelas escolhidas. `data/` e qualquer outro
+  prefixo ficam intocados.
+- Aborta se uma tabela não tiver arquivos locais, ou se for apagar mais de 25% dos arquivos
+  remotos de uma tabela (a menos que se passe `--allow-mass-delete`).
+- Termina com código diferente de 0 se algum envio ou deleção falhar.
+
+Depois de publicar, confira em `https://ibpt.nfe.io` pelo menos `lc116/sp/1725.json` e
+`nbs/sp/114063300.json` (versão `26.2.B`, 13,45 + 0 + 4,06), validando o campo `version`.
+
+Os `deploy_*.js` publicavam no Azure Blob, que não é mais usado.
+
+> **Consumidor:** o `ApproximateTaxesRepository` do `dfetech-service-invoice-api` lê de
+> `https://ibpt.nfe.io` (`IbptApi__BaseAddress`).
