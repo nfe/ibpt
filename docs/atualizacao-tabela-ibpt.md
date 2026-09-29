@@ -118,10 +118,24 @@ A publicação é feita pelo workflow `.github/workflows/publish.yml` (**Publish
   opções `apply` e `allow_mass_delete`. Use a segunda quando uma versão nova do IBPT remover mais
   de 25% dos códigos de uma tabela: o push falha na trava, e a execução manual libera.
 
-Duas publicações nunca rodam ao mesmo tempo. O workflow precisa dos secrets `R2_ACCOUNT_ID`,
-`R2_ACCESS_KEY_ID` e `R2_SECRET_ACCESS_KEY` no repositório (token de API do R2, sem expiração, com
-Object Read & Write só no bucket `ibpt`). Sem eles, a simulação do PR é pulada com um aviso e o push
-falha.
+Duas publicações nunca rodam ao mesmo tempo, e uma simulação nunca substitui uma publicação na fila.
+
+O token de escrita **nunca fica disponível para código que não passou por merge**. Um PR, mesmo de
+uma branch deste repositório, executa o próprio `package.json`, o script e o workflow do PR. Por
+isso as credenciais são separadas:
+
+| Onde | Secret | Token do R2 | Usado por |
+|---|---|---|---|
+| Repositório | `R2_ACCOUNT_ID` | ID da conta (`aec519e6630258afd5c061edb8eccb7e`) | os dois jobs |
+| Repositório | `R2_READONLY_ACCESS_KEY_ID`, `R2_READONLY_SECRET_ACCESS_KEY` | **Object Read only**, bucket `ibpt` | simulações (PR e manual) |
+| Environment `production` | `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY` | **Object Read & Write**, bucket `ibpt` | publicação (push na `master` e manual com `apply`) |
+
+O environment `production` precisa estar configurado com **Deployment branches and tags: Selected
+branches → `master`**. Assim, só jobs rodando na `master` leem o token de escrita, mesmo que um PR
+altere o workflow. **Não deixe `R2_ACCESS_KEY_ID`/`R2_SECRET_ACCESS_KEY` como secrets do
+repositório.**
+
+Sem os secrets de leitura, a simulação do PR é pulada com um aviso. Sem os de escrita, o push falha.
 
 Fluxo de uma versão nova: gerar os JSONs com o gerador, abrir PR (a simulação mostra o impacto no
 bucket), revisar e fazer o merge (o Action publica).

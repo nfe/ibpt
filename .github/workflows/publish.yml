@@ -5,10 +5,15 @@ name: Publish IBPT tables
 #
 # - push to master: publishes (--apply) only what changed
 # - pull request: dry-run, shows what would be uploaded and deleted
-# - manual run: dry-run by default, with options to apply and to allow mass deletes
+# - manual run: dry-run by default, with options to apply (master only) and to
+#   allow mass deletes
 #
-# Requires the repository secrets R2_ACCOUNT_ID, R2_ACCESS_KEY_ID and
-# R2_SECRET_ACCESS_KEY (R2 API token with Object Read & Write on the "ibpt" bucket).
+# Credentials (never give the write token to code that has not been merged):
+# - repository secrets R2_ACCOUNT_ID, R2_READONLY_ACCESS_KEY_ID and
+#   R2_READONLY_SECRET_ACCESS_KEY: R2 token with Object Read only, used by dry-runs
+# - environment "production" (deployment branches: master only) secrets
+#   R2_ACCESS_KEY_ID and R2_SECRET_ACCESS_KEY: R2 token with Object Read & Write
+#   on the "ibpt" bucket, used only by the publish job
 
 on:
   push:
@@ -42,7 +47,7 @@ on:
         default: "lc116,nbs,ncm"
         required: true
       apply:
-        description: "Publish for real (unchecked = dry-run)"
+        description: "Publish for real, master only (unchecked = dry-run)"
         type: boolean
         default: false
       allow_mass_delete:
@@ -53,26 +58,31 @@ on:
 permissions:
   contents: read
 
-# never two publishes at the same time; a newer push waits for the running one
-concurrency:
-  group: publish-ibpt
-  cancel-in-progress: false
-
 jobs:
   publish:
-    # pull requests from forks have no access to the secrets
-    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
+    if: github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && inputs.apply)
     runs-on: ubuntu-latest
     timeout-minutes: 180
+    # the write token lives only in this environment, restricted to master
+    environment: production
+    # one publish at a time; only publishes share this group, so a dry-run can
+    # never replace a pending publish
+    concurrency:
+      group: publish-ibpt
+      cancel-in-progress: false
     env:
       R2_ACCOUNT_ID: ${{ secrets.R2_ACCOUNT_ID }}
       R2_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
       R2_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
-      EVENT_NAME: ${{ github.event_name }}
       INPUT_TABLES: ${{ inputs.tables }}
-      INPUT_APPLY: ${{ inputs.apply }}
       INPUT_ALLOW_MASS_DELETE: ${{ inputs.allow_mass_delete }}
     steps:
+      - name: Check branch
+        if: github.ref != 'refs/heads/master'
+        run: |
+          echo "::error::publishing is only allowed from master"
+          exit 1
+
       - uses: actions/checkout@v5
         with:
           lfs: false
@@ -90,19 +100,11 @@ jobs:
           set -o pipefail
 
           if [ -z "$R2_ACCESS_KEY_ID" ] || [ -z "$R2_SECRET_ACCESS_KEY" ] || [ -z "$R2_ACCOUNT_ID" ]; then
-            if [ "$EVENT_NAME" = "pull_request" ]; then
-              echo "::warning::R2 secrets are not configured, skipping the dry-run"
-              exit 0
-            fi
-            echo "::error::R2 secrets are not configured (R2_ACCOUNT_ID, R2_ACCESS_KEY_ID, R2_SECRET_ACCESS_KEY)"
+            echo "::error::R2 write secrets are not configured (R2_ACCOUNT_ID, and R2_ACCESS_KEY_ID / R2_SECRET_ACCESS_KEY in the production environment)"
             exit 1
           fi
 
-          args=(--tables "${INPUT_TABLES:-lc116,nbs,ncm}")
-
-          if [ "$EVENT_NAME" = "push" ] || [ "$INPUT_APPLY" = "true" ]; then
-            args+=(--apply)
-          fi
+          args=(--tables "${INPUT_TABLES:-lc116,nbs,ncm}" --apply)
 
           if [ "$INPUT_ALLOW_MASS_DELETE" = "true" ]; then
             args+=(--allow-mass-delete)
@@ -117,6 +119,58 @@ jobs:
           [ -f publish.log ] || exit 0
           {
             echo '### Publish IBPT tables'
+            echo '```'
+            grep -vE '^  [a-z0-9]+: (uploaded|compared|listed) ' publish.log
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+
+  dry-run:
+    # pull requests from forks have no access to the secrets
+    if: >-
+      (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository) ||
+      (github.event_name == 'workflow_dispatch' && !inputs.apply)
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    # a newer dry-run of the same branch replaces the older one
+    concurrency:
+      group: dry-run-ibpt-${{ github.ref }}
+      cancel-in-progress: true
+    env:
+      R2_ACCOUNT_ID: ${{ secrets.R2_ACCOUNT_ID }}
+      R2_ACCESS_KEY_ID: ${{ secrets.R2_READONLY_ACCESS_KEY_ID }}
+      R2_SECRET_ACCESS_KEY: ${{ secrets.R2_READONLY_SECRET_ACCESS_KEY }}
+      INPUT_TABLES: ${{ inputs.tables }}
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          lfs: false
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci --no-audit --no-fund
+
+      - name: Dry-run
+        shell: bash
+        run: |
+          set -o pipefail
+
+          if [ -z "$R2_ACCESS_KEY_ID" ] || [ -z "$R2_SECRET_ACCESS_KEY" ] || [ -z "$R2_ACCOUNT_ID" ]; then
+            echo "::warning::R2 read-only secrets are not configured (R2_ACCOUNT_ID, R2_READONLY_ACCESS_KEY_ID, R2_READONLY_SECRET_ACCESS_KEY), skipping the dry-run"
+            exit 0
+          fi
+
+          node publish-r2.js --tables "${INPUT_TABLES:-lc116,nbs,ncm}" 2>&1 | tee publish.log
+
+      - name: Summary
+        if: always()
+        shell: bash
+        run: |
+          [ -f publish.log ] || exit 0
+          {
+            echo '### Dry-run IBPT tables'
             echo '```'
             grep -vE '^  [a-z0-9]+: (uploaded|compared|listed) ' publish.log
             echo '```'
