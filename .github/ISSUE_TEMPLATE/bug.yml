@@ -1,0 +1,97 @@
+name: Bug
+type: Bug
+description: Defeito em comportamento existente. Use quando algo deveria funcionar de um jeito mas nao funciona.
+title: "<verbo + objeto + qualificador>"
+labels: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        > Template placeholder publicado por `nfe:create-issue` (bootstrap). Sera substituido
+        > pelo canonico de `nfe/.github/.github/ISSUE_TEMPLATE/bug.yml` no proximo sync
+        > do provisioner em `nfe/.github#20`.
+  - type: textarea
+    id: origem
+    attributes:
+      label: Origem
+      description: "Quem reportou, por qual canal, link ou thread."
+      placeholder: "> Origem: @fulano via Slack #canal-x — https://..."
+    validations:
+      required: true
+  - type: textarea
+    id: contexto
+    attributes:
+      label: Contexto
+      description: "O que deveria acontecer? O que esta acontecendo? Em que ambiente foi observado?"
+    validations:
+      required: true
+  - type: textarea
+    id: passos-reproducao
+    attributes:
+      label: Passos para reproduzir
+      description: "Lista numerada minima para chegar no defeito."
+      placeholder: "1. ...\n2. ...\n3. (observa o erro)"
+    validations:
+      required: true
+  - type: textarea
+    id: objetivo
+    attributes:
+      label: Objetivo
+      description: "O comportamento esperado, em uma frase."
+    validations:
+      required: true
+  - type: textarea
+    id: criterios-aceitacao
+    attributes:
+      label: Criterios de aceitacao
+      description: "Como validar que esta corrigido. Inclua reproducao do passo 'comportamento esperado'."
+    validations:
+      required: true
+  - type: textarea
+    id: dependencias
+    attributes:
+      label: Dependencias
+      value: "Nenhuma"
+    validations:
+      required: true
+  - type: textarea
+    id: referencias
+    attributes:
+      label: Referencias
+      description: "Logs, traces, dashboards, threads, PRs relacionados. Minimo 1."
+    validations:
+      required: true
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Priority
+      options:
+        - Critical
+        - High
+        - Medium
+        - Low
+    validations:
+      required: true
+  - type: dropdown
+    id: severity
+    attributes:
+      label: Severity
+      description: "Critical=critico em producao; High=funcional comprometido sem workaround; Medium=workaround possivel; Low=cosmetico."
+      options:
+        - Critical
+        - High
+        - Medium
+        - Low
+    validations:
+      required: true
+  - type: dropdown
+    id: compliance
+    attributes:
+      label: Compliance
+      options:
+        - "Nao"
+        - "Vigente"
+        - "<90d"
+        - ">90d"
+    validations:
+      required: true
