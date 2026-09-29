@@ -1,0 +1,76 @@
+name: Task / Chore
+type: Task
+description: Manutencao tecnica, limpeza, atualizacao de dependencia, refatoracao sem mudanca de comportamento, ajuste de configuracao. Use para trabalho operacional necessario que nao e feature, bug ou improvement.
+title: "<verbo + objeto + qualificador>"
+labels: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        > Template placeholder publicado por `nfe:create-issue` (bootstrap). Sera substituido
+        > pelo canonico de `nfe/.github/.github/ISSUE_TEMPLATE/chore.yml` no proximo sync
+        > do provisioner em `nfe/.github#20`.
+  - type: textarea
+    id: origem
+    attributes:
+      label: Origem
+      placeholder: "> Origem: @fulano via Slack #canal-x — https://..."
+    validations:
+      required: true
+  - type: textarea
+    id: contexto
+    attributes:
+      label: Contexto
+      description: "Por que precisamos fazer isso? Que constraint, divida ou risco motivou?"
+    validations:
+      required: true
+  - type: textarea
+    id: objetivo
+    attributes:
+      label: Objetivo
+      description: "Resultado esperado em uma frase."
+    validations:
+      required: true
+  - type: textarea
+    id: criterios-aceitacao
+    attributes:
+      label: Criterios de aceitacao
+      description: "Como saber que terminou. Inclua impacto no sistema (ex: 'CI verde', 'lib X removida do package.json')."
+    validations:
+      required: true
+  - type: textarea
+    id: dependencias
+    attributes:
+      label: Dependencias
+      value: "Nenhuma"
+    validations:
+      required: true
+  - type: textarea
+    id: referencias
+    attributes:
+      label: Referencias
+      description: "PRs, ADRs, threads, alertas. Minimo 1."
+    validations:
+      required: true
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Priority
+      options:
+        - Critical
+        - High
+        - Medium
+        - Low
+    validations:
+      required: true
+  - type: dropdown
+    id: compliance
+    attributes:
+      label: Compliance
+      options:
+        - "Nao"
+        - "Vigente"
+        - "<90d"
+        - ">90d"
+    validations:
+      required: true
