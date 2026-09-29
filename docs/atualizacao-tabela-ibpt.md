@@ -45,7 +45,10 @@ com o campo `mappedFrom`. Se o IBPT passar a publicar o item na tabela LC116, a 
 | 25.05 | 1.2603.00.00 | Serviços funerários, de cremação e de embalsamamento |
 | 01.09 | — | Sem correlação na tabela: o arquivo manual é mantido (inclusive com `--clean`) |
 
-Os arquivos versionados desses 4 itens foram regenerados a partir dos NBS 19.2.B do repositório.
+Em 29/09/2026 as tabelas `lc116` e `nbs` foram regeneradas com a **26.2.B**
+(vigência 20/09/2026 a 31/10/2026), com `--clean`. Foram removidos 2.808 arquivos NBS de códigos que
+não existem mais no IBPT (versões 15.1.B, 15.1.C e 17.1.A). Nenhum arquivo LC116 foi removido.
+Os CSVs não foram versionados, porque não havia Git LFS disponível. A tabela `ncm` continua na 19.2.B.
 
 Também há arquivos NBS que não existem mais na tabela do IBPT (versões 15.1.x e 17.1.A) e
 continuam publicados. O `--clean` do gerador evita que isso se repita.
