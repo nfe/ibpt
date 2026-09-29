@@ -2,8 +2,14 @@
 
 ## Causa raiz: produção presa na 18.1.B (issue #2)
 
-Produção (`nfeprodibpt.blob.core.windows.net`) respondia a versão **18.1.B** (abril/2018),
-embora o repositório tivesse dados até a **19.2.B** (novembro/2019).
+Produção respondia a versão **18.1.B** (abril/2018), embora o repositório tivesse dados
+até a **19.2.B** (novembro/2019).
+
+O `dfetech-service-invoice-api` lê de `https://ibpt.nfe.io` (`IbptApi__BaseAddress` em
+`kubernetes/ServiceInvoicesApp/values-production.yaml`). Esse domínio está atrás da Cloudflare.
+O storage `nfeprodibpt.blob.core.windows.net`, citado no `.env.example` da API, **não existe mais**
+(NXDOMAIN em 29/09/2026). A origem real de `ibpt.nfe.io` ainda precisa ser identificada
+no DNS da Cloudflare.
 
 A publicação rodava no Travis CI (`.travis.yml`), em `after_script`, com **Node 0.10**:
 
@@ -45,10 +51,11 @@ excluiu não fiquem para trás.
 ## Publicação
 
 Ainda é manual (`deploy_lc116.js` / `deploy_nbs.js` com `AZURE_ACCOUNT`/`AZURE_TOKEN`).
-Depois de publicar, confira pelo menos `nbs/sp/114063300.json` e uma amostra de cada estado
-no blob de produção, validando o campo `version`.
+Antes de publicar, confirme que a origem de `ibpt.nfe.io` é o storage em que os scripts publicam.
+Depois de publicar, limpe o cache da Cloudflare e confira em `https://ibpt.nfe.io` pelo menos
+`nbs/sp/114063300.json` e uma amostra de cada estado, validando o campo `version`.
 
-> **Migração Azure → GCP:** este projeto publica diretamente no Azure Blob e é consumido pelo
-> `ApproximateTaxesRepository` do `dfetech-service-invoice-api` (`IbptApi.BaseAddress`).
-> Na migração, os containers `lc116`, `nbs` e `ncm` e os scripts de deploy precisam ser levados
-> para o novo storage, e `IbptApi.BaseAddress` precisa ser atualizado.
+> **Migração Azure → GCP:** os arquivos são consumidos via `https://ibpt.nfe.io` (Cloudflare) pelo
+> `ApproximateTaxesRepository` do `dfetech-service-invoice-api`. Na migração, as tabelas `lc116`,
+> `nbs` e `ncm` e os scripts de deploy precisam ir para o novo storage, e a origem de `ibpt.nfe.io`
+> na Cloudflare precisa ser apontada para ele. Assim o `IbptApi__BaseAddress` não muda.
