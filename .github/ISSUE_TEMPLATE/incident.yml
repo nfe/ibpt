@@ -1,0 +1,107 @@
+name: Incident
+type: Incident
+description: Evento de degradacao ou indisponibilidade que ja aconteceu (ou esta acontecendo). Use para postmortem, registro de causa raiz, follow-ups de remediacao.
+title: "<verbo + objeto + qualificador>"
+labels: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        > Template placeholder publicado por `nfe:create-issue` (bootstrap). Sera substituido
+        > pelo canonico de `nfe/.github/.github/ISSUE_TEMPLATE/incident.yml` no proximo sync
+        > do provisioner em `nfe/.github#20`.
+
+        > Para incidentes ativos, abra primeiro o canal de war room e use esta issue para o
+        > registro pos-evento. Esta issue **nao** substitui o playbook de oncall.
+  - type: textarea
+    id: origem
+    attributes:
+      label: Origem
+      description: "Quem detectou, por qual canal/alerta, link da thread."
+      placeholder: "> Origem: alerta Grafana 'X' — thread #incident-2026-04-29 — https://..."
+    validations:
+      required: true
+  - type: textarea
+    id: contexto
+    attributes:
+      label: Contexto
+      description: "O que aconteceu. Qual sistema/cliente foi afetado. Como foi detectado."
+    validations:
+      required: true
+  - type: textarea
+    id: timeline
+    attributes:
+      label: Timeline
+      description: "Eventos com timestamp UTC ou America/Sao_Paulo. Inclua deteccao, mitigacao, resolucao."
+      placeholder: "- 14:02 BRT — primeiro alerta\n- 14:08 BRT — pageado oncall\n- ..."
+    validations:
+      required: true
+  - type: textarea
+    id: impacto
+    attributes:
+      label: Impacto quantificado
+      description: "Numero afetado (clientes, requests, R$). Duracao."
+    validations:
+      required: true
+  - type: textarea
+    id: causa-raiz
+    attributes:
+      label: Causa raiz
+      description: "5-whys ou equivalente. Se ainda em investigacao, deixar claro."
+    validations:
+      required: true
+  - type: textarea
+    id: criterios-aceitacao
+    attributes:
+      label: Criterios de aceitacao (follow-ups)
+      description: "Acoes para evitar recorrencia. Cada uma deve virar issue de chore/feature/improvement separada e ser linkada como sub-issue."
+    validations:
+      required: true
+  - type: textarea
+    id: dependencias
+    attributes:
+      label: Dependencias
+      value: "Nenhuma"
+    validations:
+      required: true
+  - type: textarea
+    id: referencias
+    attributes:
+      label: Referencias
+      description: "Dashboards, logs, threads de war room, runbooks. Minimo 1."
+    validations:
+      required: true
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Priority
+      options:
+        - Critical
+        - High
+        - Medium
+        - Low
+    validations:
+      required: true
+  - type: dropdown
+    id: severity
+    attributes:
+      label: Severity
+      description: "Critical=indisponibilidade total; High=degradacao majoritaria sem workaround; Medium=workaround possivel; Low=cosmetico."
+      options:
+        - Critical
+        - High
+        - Medium
+        - Low
+    validations:
+      required: true
+  - type: dropdown
+    id: compliance
+    attributes:
+      label: Compliance
+      options:
+        - "Nao"
+        - "Vigente"
+        - "<90d"
+        - ">90d"
+    validations:
+      required: true
