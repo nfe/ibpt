@@ -48,7 +48,7 @@ com o campo `mappedFrom`. Se o IBPT passar a publicar o item na tabela LC116, a 
 Em 29/09/2026 as tabelas `lc116` e `nbs` foram regeneradas com a **26.2.B**
 (vigência 20/09/2026 a 31/10/2026), com `--clean`. Foram removidos 2.808 arquivos NBS de códigos que
 não existem mais no IBPT (versões 15.1.B, 15.1.C e 17.1.A). Nenhum arquivo LC116 foi removido.
-Os CSVs não foram versionados, porque não havia Git LFS disponível. A tabela `ncm` continua na 19.2.B.
+Os CSVs não foram versionados, porque não havia Git LFS disponível. A tabela `ncm` também foi regenerada com a 26.2.B (`--tables ncm --clean`): 24.030 arquivos de códigos que saíram da NCM foram removidos e 20.574 foram criados.
 
 Também há arquivos NBS que não existem mais na tabela do IBPT (versões 15.1.x e 17.1.A) e
 continuam publicados. O `--clean` do gerador evita que isso se repita.
