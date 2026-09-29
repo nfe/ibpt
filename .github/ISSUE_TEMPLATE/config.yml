@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Padrao oficial de issues NFe
+    url: https://github.com/nfe/.github
+    about: "Documentacao do padrao oficial de issues. Caso nenhum dos templates acima sirva, abra um chamado com o time AI Governance antes de criar issue em branco."
