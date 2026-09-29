@@ -1,0 +1,91 @@
+name: Feature
+type: Feature
+description: Nova funcionalidade. Use para implementar suporte novo, adicionar capacidade, habilitar fluxo inexistente.
+title: "<verbo + objeto + qualificador>"
+labels: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        > Template placeholder publicado por `nfe:create-issue` (bootstrap). Sera substituido
+        > pelo canonico de `nfe/.github/.github/ISSUE_TEMPLATE/feature.yml` no proximo sync
+        > do provisioner em `nfe/.github#20`.
+  - type: textarea
+    id: origem
+    attributes:
+      label: Origem
+      description: "Quem solicitou, por qual canal, link ou thread."
+      placeholder: "> Origem: @fulano via Slack #canal-x — https://..."
+    validations:
+      required: true
+  - type: textarea
+    id: contexto
+    attributes:
+      label: Contexto
+      description: "Qual o problema atual? O que acontece se nao fizer? Quem e impactado?"
+    validations:
+      required: true
+  - type: textarea
+    id: objetivo
+    attributes:
+      label: Objetivo
+      description: "Resultado esperado em uma frase. Inclua usuario-alvo e metrica de sucesso."
+    validations:
+      required: true
+  - type: textarea
+    id: escopo-inclui
+    attributes:
+      label: "Escopo — Inclui"
+      description: "O que entra nesta issue."
+  - type: textarea
+    id: escopo-nao-inclui
+    attributes:
+      label: "Escopo — Nao inclui"
+      description: "O que fica para outra issue (evita scope creep)."
+  - type: textarea
+    id: criterios-aceitacao
+    attributes:
+      label: Criterios de aceitacao
+      description: "Lista objetivamente verificavel. Cada item deve ter metrica concreta."
+      placeholder: "- [ ] Endpoint /v1/foo retorna 200 com payload Y\n- [ ] Latencia p95 < 300ms"
+    validations:
+      required: true
+  - type: textarea
+    id: dependencias
+    attributes:
+      label: Dependencias
+      description: "Issues, servicos, pessoas. 'Nenhuma' e resposta valida."
+      value: "Nenhuma"
+    validations:
+      required: true
+  - type: textarea
+    id: referencias
+    attributes:
+      label: Referencias
+      description: "Links, docs, threads, PRs, normas. Minimo 1."
+    validations:
+      required: true
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Priority
+      description: "Vocabulario canonico da org (sem P0-P3)."
+      options:
+        - Critical
+        - High
+        - Medium
+        - Low
+    validations:
+      required: true
+  - type: dropdown
+    id: compliance
+    attributes:
+      label: Compliance
+      description: "Existe motivacao regulatoria? Se sim, qual a janela do prazo oficial?"
+      options:
+        - "Nao"
+        - "Vigente"
+        - "<90d"
+        - ">90d"
+    validations:
+      required: true
