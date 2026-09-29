@@ -1,34 +1,61 @@
 # Atualização da tabela IBPT
 
-## Causa raiz: produção presa na 18.1.B (issue #2)
+## Causa raiz: NFS-e com 15,89% "IBPT (18.1.B)" (issue #2)
 
-Produção respondia a versão **18.1.B** (abril/2018), embora o repositório tivesse dados
-até a **19.2.B** (novembro/2019).
+Diagnóstico confirmado em produção em 29/09/2026:
 
-O `dfetech-service-invoice-api` lê de `https://ibpt.nfe.io` (`IbptApi__BaseAddress` em
-`kubernetes/ServiceInvoicesApp/values-production.yaml`). Esse domínio está atrás da Cloudflare.
-O storage `nfeprodibpt.blob.core.windows.net`, citado no `.env.example` da API, **não existe mais**
-(NXDOMAIN em 29/09/2026). A origem real de `ibpt.nfe.io` ainda precisa ser identificada
-no DNS da Cloudflare.
+- O `dfetech-service-invoice-api` lê de `https://ibpt.nfe.io` (`IbptApi__BaseAddress` em
+  `kubernetes/ServiceInvoicesApp/values-production.yaml`). Esse domínio responde pela Cloudflare
+  (`cf-cache-status: DYNAMIC`, sem cabeçalhos de Azure ou GCS). O storage
+  `nfeprodibpt.blob.core.windows.net`, citado no `.env.example` da API, **não existe mais**.
+- A API consulta **somente a tabela LC116**:
+  `OneAsync("lc116", uf, federalServiceCode)` em `ServiceInvoiceApplicationService.cs`.
+  A tabela NBS não participa do cálculo.
+- O que `ibpt.nfe.io` serve hoje é a **21.1.F**, publicada fora deste repositório
+  (`Last-Modified` de 14/09/2026). Por exemplo, `nbs/sp/114063300.json` = 21.1.F, 17,51%.
+- `ibpt.nfe.io/lc116/sp/1725.json` responde **18.1.B**, `code` vazio, 13,45 + 0 + 2,44 = **15,89%**,
+  exatamente o valor da nota.
+
+O item 17.25 da LC 116 ("inserção de propaganda em qualquer meio") e os demais itens criados
+pela LC 157/2016 **não existem na tabela do IBPT**. Em 04/04/2018 o commit `2670309`
+("Add JSON data for new services version 18.1.B") criou esses arquivos **à mão**, para todos os
+estados:
+
+| Código LC116 | Versão | Observação |
+|---|---|---|
+| `0109` | 18.1.B | |
+| `0606` | 18.1.B | `code` vazio |
+| `1602` | 18.1.B | `code` vazio |
+| `1725` | 18.1.B | `code` vazio |
+| `2505` | 18.1.B | `code` vazio |
+
+Como esses códigos não estão no CSV do IBPT, nenhuma regeração posterior tocou nesses arquivos,
+e eles seguem com os dados de 2018. Publicar a 26.2.B, sozinho, **não corrige** esses códigos.
+É preciso decidir como obter as alíquotas deles:
+
+- manter manualmente, revisando a cada versão;
+- mapear para um item equivalente da LC116 ou do NBS;
+- ou fazer a API consultar a tabela NBS quando houver código NBS.
+
+Também há arquivos NBS que não existem mais na tabela do IBPT (versões 15.1.x e 17.1.A) e
+continuam publicados. O `--clean` do gerador evita que isso se repita.
+
+### Por que o repositório parou na 19.2.B
 
 A publicação rodava no Travis CI (`.travis.yml`), em `after_script`, com **Node 0.10**:
 
 1. Em 06/08/2018 o commit `4ca3d1d` ("Update deploy threads") trocou o logger dos
    `deploy_*.js` por `var logger = () => {};`. Arrow functions não existem no Node 0.10,
-   então, a partir daí, todo script de deploy morria com `SyntaxError` antes de enviar
-   qualquer arquivo.
-2. No Travis, falha em `after_script` **não reprova o build**. O erro ficou invisível.
+   então todo script de deploy passou a morrer com `SyntaxError` antes de enviar qualquer arquivo.
+2. No Travis, falha em `after_script` **não reprova o build**, e o erro ficou invisível.
 3. Em novembro/2019 o commit `5f1583e` atualizou as dependências (`deploy-azure-cdn` 2.x,
    `dotenv` 8, `glob` 7), que também não rodam no Node 0.10.
-
-Por isso nenhuma versão posterior à 18.1.B (18.2.B, 18.2.C, 19.1.B, 19.2.B) chegou ao blob.
-O Travis CI para repositórios abertos foi desligado depois, então hoje não há nenhuma publicação.
 
 Outros pontos que agravam o problema:
 
 - Os scripts de deploy só fazem `console.log` do erro e sempre terminam com código 0.
 - Os blobs são enviados com `Cache-Control: public, max-age=31556926` (1 ano).
-- O gerador (`generate-json-from-csv.js`) só registrava erros de parsing, sem falhar.
+- O gerador só registrava erros de parsing, sem falhar.
 
 ## Gerador
 
@@ -50,8 +77,9 @@ excluiu não fiquem para trás.
 
 ## Publicação
 
-Ainda é manual (`deploy_lc116.js` / `deploy_nbs.js` com `AZURE_ACCOUNT`/`AZURE_TOKEN`).
-Antes de publicar, confirme que a origem de `ibpt.nfe.io` é o storage em que os scripts publicam.
+Os `deploy_lc116.js` / `deploy_nbs.js` publicam no Azure Blob, mas `ibpt.nfe.io` hoje responde
+por outra origem, na Cloudflare, e a 21.1.F foi publicada fora deste repositório. Antes de publicar,
+identifique essa origem (DNS/Workers/R2 da zona `nfe.io` na Cloudflare) e publique nela.
 Depois de publicar, limpe o cache da Cloudflare e confira em `https://ibpt.nfe.io` pelo menos
 `nbs/sp/114063300.json` e uma amostra de cada estado, validando o campo `version`.
 
