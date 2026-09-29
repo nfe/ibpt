@@ -43,7 +43,15 @@ com o campo `mappedFrom`. Se o IBPT passar a publicar o item na tabela LC116, a 
 | 16.02 | 1.0401.19.00 | Transporte terrestre local de passageiros n.c.o.p. |
 | 17.25 | 1.1406.33.00 | Venda de espaço para propaganda na internet, exceto sob comissão |
 | 25.05 | 1.2603.00.00 | Serviços funerários, de cremação e de embalsamamento |
+| 11.05 | 1.1802.30.00 | Serviços de sistemas de segurança |
 | 01.09 | — | Sem correlação na tabela: o arquivo manual é mantido (inclusive com `--clean`) |
+| 99.01, 99.99 | — | Códigos genéricos (não são itens da LC 116), manuais |
+
+Os códigos 11.05 (GO e SP) e 99.01/99.99 (GO e RJ) foram criados à mão no storage entre
+outubro/2025 e junho/2026, fora deste repositório, provavelmente para destravar notas que falhavam
+com `ibpt code 'X' was not found`. O 11.05 agora é gerado pelo NBS para todos os estados. Os
+arquivos de GO dos códigos 99.xx foram versionados. Os de RJ existem só no bucket e ficam protegidos,
+porque o `publish-r2.js` nunca apaga códigos manuais (`nbs: null` no mapa).
 
 Em 29/09/2026 as tabelas `lc116` e `nbs` foram regeneradas com a **26.2.B**
 (vigência 20/09/2026 a 31/10/2026), com `--clean`. Foram removidos 2.808 arquivos NBS de códigos que
