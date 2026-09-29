@@ -30,12 +30,22 @@ estados:
 | `2505` | 18.1.B | `code` vazio |
 
 Como esses códigos não estão no CSV do IBPT, nenhuma regeração posterior tocou nesses arquivos,
-e eles seguem com os dados de 2018. Publicar a 26.2.B, sozinho, **não corrige** esses códigos.
-É preciso decidir como obter as alíquotas deles:
+e eles seguiam com os dados de 2018.
 
-- manter manualmente, revisando a cada versão;
-- mapear para um item equivalente da LC116 ou do NBS;
-- ou fazer a API consultar a tabela NBS quando houver código NBS.
+**Correção:** `lc116-nbs-map.json` associa cada um desses itens a um código NBS, conforme a tabela
+de correlação LC116 × NBS (`docs/lc116NbsCorrelationTable-pt-br.json` do `dfetech-service-invoice-api`).
+A cada geração, o gerador cria `lc116/{uf}/{codigo}.json` com as alíquotas desse NBS na mesma versão,
+com o campo `mappedFrom`. Se o IBPT passar a publicar o item na tabela LC116, a linha oficial prevalece.
+
+| LC116 | NBS | Descrição do NBS |
+|---|---|---|
+| 06.06 | 1.2602.90.00 | Tratamento de beleza e bem-estar físico n.c.o.p. |
+| 16.02 | 1.0401.19.00 | Transporte terrestre local de passageiros n.c.o.p. |
+| 17.25 | 1.1406.33.00 | Venda de espaço para propaganda na internet, exceto sob comissão |
+| 25.05 | 1.2603.00.00 | Serviços funerários, de cremação e de embalsamamento |
+| 01.09 | — | Sem correlação na tabela: o arquivo manual é mantido (inclusive com `--clean`) |
+
+Os arquivos versionados desses 4 itens foram regenerados a partir dos NBS 19.2.B do repositório.
 
 Também há arquivos NBS que não existem mais na tabela do IBPT (versões 15.1.x e 17.1.A) e
 continuam publicados. O `--clean` do gerador evita que isso se repita.

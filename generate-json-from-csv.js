@@ -8,6 +8,10 @@
 //   --clean    removes the existing json files of the selected tables before
 //              generating, so codes dropped by IBPT do not stay behind
 //
+// LC116 items missing from the IBPT table (added by LC 157/2016) are generated
+// from the rates of the NBS code set in lc116-nbs-map.json, so they follow every
+// new IBPT version. Items mapped to null are kept as they are.
+//
 // Exits with non-zero code when a csv is missing, can not be parsed or has
 // rows from a different version, so a partial table is never generated silently.
 
@@ -38,6 +42,14 @@ try {
 }
 
 var states = ibpt.states;
+
+// lc116 code => nbs code, see lc116-nbs-map.json
+var lc116NbsMap = JSON.parse(fs.readFileSync(path.join(__dirname, "lc116-nbs-map.json"), "utf8"));
+delete lc116NbsMap._comment;
+
+var mappedNbsCodes = Object.keys(lc116NbsMap).map(function (code) {
+  return lc116NbsMap[code].nbs;
+}).filter(Boolean);
 
 var csvFileName = function (state) {
   return path.join("raw-data", "TabelaIBPTax" + state.toUpperCase() + version + ".csv");
@@ -72,11 +84,38 @@ var writeFile = function (data) {
   fs.writeFileSync(path, iconvlite.encode(JSON.stringify(data), 'UTF-8'));
 };
 
+// writes the lc116 items missing from the csv using the rates of the mapped nbs code
+var writeMappedLc116 = function (state, lc116Codes, nbsRows) {
+  var count = 0;
+
+  Object.keys(lc116NbsMap).forEach(function (code) {
+    var nbs = lc116NbsMap[code].nbs;
+
+    // null means no known nbs correlation, or the code is already in the ibpt table
+    if (!nbs || lc116Codes[code]) return;
+
+    if (!nbsRows[nbs]) {
+      throw new Error("nbs code " + nbs + " mapped to lc116 " + code + " not found for state " + state);
+    }
+
+    var data = toEnglish(state, nbsRows[nbs]);
+    data.fiscalType = "lc116";
+    data.code = code;
+    data.mappedFrom = "nbs/" + nbs;
+    writeFile(data);
+    count++;
+  });
+
+  return count;
+};
+
 // processes a single state csv, resolving with the number of files per table
 var processState = function (state) {
   return new Promise(function (resolve, reject) {
     var fileName = csvFileName(state);
     var counts = {};
+    var lc116Codes = {};
+    var nbsRows = {};
     var failed = false;
     var fail = function (err) {
       if (failed) return;
@@ -109,15 +148,20 @@ var processState = function (state) {
         if (failed) return;
 
         var table = ibpt.tables[data.tipo];
+        var mapped = table === "nbs" && mappedNbsCodes.indexOf(data.codigo) !== -1;
 
         // we only need to process the selected types (also skips the header row)
-        if (!table || tables.indexOf(table) === -1)
+        if (!table || (tables.indexOf(table) === -1 && !mapped))
           return;
 
         if (data.versao !== version) {
           return fail(new Error("found version '" + data.versao + "' on code " +
             data.codigo + ", expected '" + version + "'"));
         }
+
+        if (mapped) nbsRows[data.codigo] = data;
+        if (table === "lc116") lc116Codes[data.codigo] = true;
+        if (tables.indexOf(table) === -1) return;
 
         try {
           writeFile(toEnglish(state, data));
@@ -128,6 +172,15 @@ var processState = function (state) {
       })
       .on("end", function () {
         if (failed) return;
+
+        if (tables.indexOf("lc116") !== -1) {
+          try {
+            counts.lc116 += writeMappedLc116(state, lc116Codes, nbsRows);
+          } catch (e) {
+            return fail(e);
+          }
+        }
+
         console.log("Processed file " + fileName + " " + JSON.stringify(counts));
         resolve(counts);
       });
@@ -150,7 +203,10 @@ var main = async function () {
 
       if (args.clean && fs.existsSync(dir)) {
         fs.readdirSync(dir).forEach(function (file) {
-          if (path.extname(file) === ".json") fs.unlinkSync(path.join(dir, file));
+          var code = path.basename(file, ".json");
+          // keeps the lc116 items without nbs correlation, they are not in the ibpt table
+          var manual = table === "lc116" && lc116NbsMap[code] && !lc116NbsMap[code].nbs;
+          if (path.extname(file) === ".json" && !manual) fs.unlinkSync(path.join(dir, file));
         });
       }
 
