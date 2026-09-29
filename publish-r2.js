@@ -71,7 +71,10 @@ var gzipFile = function (file) {
 var plan = function (table, local, remote) {
   var result = { table: table, upload: [], delete: [], unchanged: 0, remoteCount: 0 };
 
-  Object.keys(local).forEach(function (key) {
+  var keys = Object.keys(local);
+
+  keys.forEach(function (key, index) {
+    if (index && index % 20000 === 0) console.log("  " + table + ": compared " + index + "/" + keys.length + " local files...");
     var md5 = gzipFile(local[key]).md5;
     if (remote[key] === md5) {
       result.unchanged++;
@@ -114,6 +117,7 @@ var listRemote = async function (client, bucket, table) {
   var ListObjectsV2Command = require("@aws-sdk/client-s3").ListObjectsV2Command;
   var remote = {};
   var token;
+  var pages = 0;
 
   do {
     var page = await client.send(new ListObjectsV2Command({
@@ -127,6 +131,7 @@ var listRemote = async function (client, bucket, table) {
     });
 
     token = page.IsTruncated ? page.NextContinuationToken : null;
+    if (++pages % 50 === 0) console.log("  " + table + ": listed " + Object.keys(remote).length + " remote files...");
   } while (token);
 
   return remote;
@@ -205,6 +210,7 @@ var main = async function () {
 
   for (var i = 0; i < tables.length; i++) {
     var table = tables[i];
+    console.log(table + ": reading local files and listing the bucket...");
     var local = localFiles(table);
 
     if (Object.keys(local).length === 0) {
@@ -248,7 +254,21 @@ module.exports = { plan: plan, isTableKey: isTableKey, gzipFile: gzipFile, listR
 if (require.main === module) {
   if (fs.existsSync(".env")) require("dotenv").config();
 
-  main().catch(function (err) {
+  var finished = false;
+
+  // node exits silently when a promise never settles and nothing else is pending;
+  // make that visible instead of looking like a successful run
+  process.on("beforeExit", function () {
+    if (!finished) {
+      console.error("ERROR: exited before finishing (a request never completed), nothing after this point was done");
+      process.exit(1);
+    }
+  });
+
+  main().then(function () {
+    finished = true;
+  }).catch(function (err) {
+    finished = true;
     console.error("ERROR: " + err.message);
     process.exit(1);
   });
